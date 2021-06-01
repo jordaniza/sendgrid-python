@@ -104,6 +104,8 @@ print(response.headers)
 
 The `Mail` constructor creates a [personalization object](https://sendgrid.com/docs/Classroom/Send/v3_Mail_Send/personalizations.html) for you. [Here](examples/helpers/mail_example.py#L16) is an example of how to add it.
 
+Additional personalizations, as detailed in the [API Docs](https://sendgrid.api-docs.io/v3.0/mail-send/v3-mail-send), can be added. Please see the *Advanced Personalizations* section below.
+
 ### Without Mail Helper Class
 
 The following is the minimum needed code to send an email without the /mail/send Helper ([here](examples/mail/mail.py#L27) is a full example):
@@ -135,6 +137,32 @@ data = {
   ]
 }
 response = sg.client.mail.send.post(request_body=data)
+print(response.status_code)
+print(response.body)
+print(response.headers)
+```
+
+## Advanced Personalizations
+Both the ([Mail Example](examples/helpers/mail_example.py#L9) and [Kitchen Sink](https://github.com/sendgrid/sendgrid-python/blob/main/use_cases/kitchen_sink.md) examples give full details on all available personalizations.
+
+In short, the `Mail` class must first be initialized with the required parameters in the minimal example above. 
+
+```python
+... # initialize the mail object as in the above example
+mail = Mail(from_email, to_email, subject, content)
+```
+
+After that, additional properties can be added using the Sendgrid helpers:
+
+```python
+from sendgrid.helpers.mail import SendAt, TemplateId
+
+# attach helper classes to the Mail object, as needed
+
+mail.template_id = TemplateId('template_id_goes_here')
+mail.send_at = SendAt(1622549055)
+
+response = sg.send(mail)
 print(response.status_code)
 print(response.body)
 print(response.headers)
